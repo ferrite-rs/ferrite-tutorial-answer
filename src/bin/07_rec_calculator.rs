@@ -22,32 +22,32 @@ define_choice! { CalculatorOps;
 type Calculator = Rec<ExternalChoice<CalculatorOps>>;
 
 fn calculator_provider(current: f64) -> Session<Calculator> {
-  todo!("Implement a calculator provider here");
-  // fix_session(offer_choice! {
-  //   Add => {
-  //     receive_value(move |val| {
-  //       calculator_provider(current + val)
-  //     })
-  //   }
-  //   Mult => {
-  //     receive_value(move |val| {
-  //       calculator_provider(current * val)
-  //     })
-  //   }
-  //   Div => {
-  //     receive_value(move |val| {
-  //       if val == 0.0 {
-  //         offer_case!(DivZero, terminate())
-  //       } else {
-  //         offer_case!(DivOk,
-  //           calculator_provider(current / val))
-  //       }
-  //     })
-  //   }
-  //   Done => {
-  //     send_value(current, terminate())
-  //   }
-  // })
+  // todo!("Implement a calculator provider here");
+  fix_session(offer_choice! {
+    Add => {
+      receive_value(move |val| {
+        calculator_provider(current + val)
+      })
+    }
+    Mult => {
+      receive_value(move |val| {
+        calculator_provider(current * val)
+      })
+    }
+    Div => {
+      receive_value(move |val| {
+        if val == 0.0 {
+          offer_case!(DivZero, terminate())
+        } else {
+          offer_case!(DivOk,
+            calculator_provider(current / val))
+        }
+      })
+    }
+    Done => {
+      send_value(current, terminate())
+    }
+  })
 }
 
 fn calculator_client(
@@ -57,46 +57,46 @@ fn calculator_client(
 ) -> Session<ReceiveChannel<Calculator, SendValue<Option<f64>, End>>>
 {
   receive_channel(move |calc| {
-    todo!("implement calculator client here");
-    // unfix_session(
-    //   calc,
-    //   choose!(
-    //     calc,
-    //     Mult,
-    //     send_value_to(
-    //       calc,
-    //       x,
-    //       unfix_session(
-    //         calc,
-    //         choose!(
-    //           calc,
-    //           Div,
-    //           send_value_to(
-    //             calc,
-    //             y,
-    //             case! { calc;
-    //               DivOk => {
-    //                 unfix_session(calc,
-    //                   choose!(calc, Add,
-    //                     send_value_to(calc, z,
-    //                       unfix_session(calc,
-    //                         choose!(calc, Done,
-    //                           receive_value_from(calc, move |res| {
-    //                             send_value(Some(res),
-    //                               wait(calc, terminate()))
-    //                           }))))))
-    //               }
-    //               DivZero => {
-    //                 send_value(None,
-    //                   wait(calc, terminate()))
-    //               }
-    //             }
-    //           )
-    //         )
-    //       )
-    //     )
-    //   ),
-    // )
+    // todo!("implement calculator client here");
+    unfix_session(
+      calc,
+      choose!(
+        calc,
+        Mult,
+        send_value_to(
+          calc,
+          x,
+          unfix_session(
+            calc,
+            choose!(
+              calc,
+              Div,
+              send_value_to(
+                calc,
+                y,
+                case! { calc;
+                  DivOk => {
+                    unfix_session(calc,
+                      choose!(calc, Add,
+                        send_value_to(calc, z,
+                          unfix_session(calc,
+                            choose!(calc, Done,
+                              receive_value_from(calc, move |res| {
+                                send_value(Some(res),
+                                  wait(calc, terminate()))
+                              }))))))
+                  }
+                  DivZero => {
+                    send_value(None,
+                      wait(calc, terminate()))
+                  }
+                }
+              )
+            )
+          )
+        )
+      ),
+    )
   })
 }
 

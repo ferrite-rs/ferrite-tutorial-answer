@@ -10,26 +10,26 @@ fn adder_provider() -> Session<Adder> {
 }
 
 fn adder_consumer() -> Session<ReceiveChannel<Adder, End>> {
-  todo!("implement adder consumer here");
-  // receive_channel(move |adder| {
-  //   send_value_to(
-  //     adder,
-  //     1,
-  //     send_value_to(
-  //       adder,
-  //       2,
-  //       receive_value_from(adder, move |result| {
-  //         println!("Result of 1 + 2: {}", result);
-  //         wait(adder, terminate())
-  //       }),
-  //     ),
-  //   )
-  // })
+  // todo!("implement adder consumer here");
+  receive_channel(move |adder| {
+    send_value_to(
+      adder,
+      1,
+      send_value_to(
+        adder,
+        2,
+        receive_value_from(adder, move |result| {
+          println!("Result of 1 + 2: {}", result);
+          wait(adder, terminate())
+        }),
+      ),
+    )
+  })
 }
 
 fn main_session() -> Session<End> {
-  todo!("link adder_provider with adder_consumer here")
-  // apply_channel(adder_consumer(), adder_provider())
+  // todo!("link adder_provider with adder_consumer here")
+  apply_channel(adder_consumer(), adder_provider())
 }
 
 #[tokio::main]

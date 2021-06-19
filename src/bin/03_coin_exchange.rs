@@ -51,25 +51,25 @@ fn main_session() -> Session<End> {
     include_session(vending_machine(), move |machine| {
       include_session(forge_nickel(), move |nickel1| {
         include_session(forge_nickel(), move |nickel2| {
-          todo!("Exchange nickel for dime, adn then get soft drink from vending machine");
-          // send_channel_to(
-          //   exchange,
-          //   coin1,
-          //   send_channel_to(
-          //     exchange,
-          //     coin2,
-          //     receive_channel_from(exchange, |dime| {
-          //       send_channel_to(
-          //         machine,
-          //         dime,
-          //         receive_value_from(machine, move |_soda| {
-          //           println!("gotten soda drink");
-          //           wait_all!([machine, exchange], terminate())
-          //         }),
-          //       )
-          //     }),
-          //   ),
-          // )
+          // todo!("Exchange nickel for dime, adn then get soft drink from vending machine");
+          send_channel_to(
+            exchange,
+            nickel1,
+            send_channel_to(
+              exchange,
+              nickel2,
+              receive_channel_from(exchange, |dime| {
+                send_channel_to(
+                  machine,
+                  dime,
+                  receive_value_from(machine, move |_soda| {
+                    println!("gotten soda drink");
+                    wait_all!([machine, exchange], terminate())
+                  }),
+                )
+              }),
+            ),
+          )
         })
       })
     })
