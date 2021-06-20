@@ -1,15 +1,26 @@
 use ferrite_session::prelude::*;
 
-// Excercise 1.1
-// Implement a greeter program that receives the name as
-// a string value and then print out the line
-//   "Hello, {name}!"
+/**
+  # Excercise 1: Greet Provider
+
+  Implement a greeter provider that receives the name as a string value and then
+  print out the line "Hello, {name}!"
+
+  After completing your solution, you should get the following result
+  running the program:
+
+  ```
+  $ cargo run --bin 01_greet
+  Hello, Alice!
+  ```
+**/
+
 fn greeter() -> Session<ReceiveValue<String, End>> {
-  todo!("implement greeter here");
-  // receive_value(move |name| {
-  //   println!("Hello, {}!", name);
-  //   terminate()
-  // })
+  // todo!("implement greeter here");
+  receive_value(move |name| {
+    println!("Hello, {}!", name);
+    terminate()
+  })
 }
 
 fn main_session() -> Session<End> {

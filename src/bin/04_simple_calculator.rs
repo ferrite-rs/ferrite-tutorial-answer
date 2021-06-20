@@ -1,11 +1,31 @@
 use ferrite_session::prelude::*;
 
+/*
+  # Excercise 4: Simple Calculator
+
+  - Implement `calculator_provider` to provide either addition or
+    multiplication operations, depending on the choice selected by
+    the client.
+
+  - You are given two calculator channels in `main_session`. Use them to
+    calculate 3 + 4 * 5 and print the result.
+
+  After completing your solution, you should get the following result
+  running the program:
+
+  ```
+  $ cargo run --bin 04_simple_calculator
+  result of 3 + 4 x 5: 23
+  ```
+*/
+type Calculator = ExternalChoice<CalculatorOps>;
+
 define_choice! { CalculatorOps;
   Add: ReceiveValue<(i32, i32), SendValue<i32, End>>,
   Mult: ReceiveValue<(i32, i32), SendValue<i32, End>>,
 }
 
-fn calculator_provider() -> Session<ExternalChoice<CalculatorOps>> {
+fn calculator_provider() -> Session<Calculator> {
   // todo!("Implement a calculator provider here");
   offer_choice! {
     Add =>
