@@ -104,10 +104,7 @@ fn spend_cash() -> Session<ReceiveChannel<Cash, End>> {
   })
 }
 
-fn atm_provider(
-  actual_pin: Pin,
-  balance: u64,
-) -> Session<Atm> {
+fn atm_provider(actual_pin: Pin, balance: u64) -> Session<Atm> {
   // todo!("Implement ATM provider here");
   receive_value(move |given_pin| {
     println!(
@@ -136,10 +133,7 @@ fn atm_provider(
       )
     } else {
       println!("[Provider] Incorrect pin provided, terminating");
-      offer_case!(
-        WrongPin,
-        terminate()
-      )
+      offer_case!(WrongPin, terminate())
     }
   })
 }

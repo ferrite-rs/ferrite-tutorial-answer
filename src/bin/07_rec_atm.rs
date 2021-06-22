@@ -57,6 +57,11 @@ use tokio::time::sleep;
   The given main program will try to run your program with different
   parameters.
 
+  Tips:
+
+    - Use `include_session(atm_client(...))` and `forward` inside
+      atm_client itself to recurse and then forward to the new client.
+
   After completing your solution, you should get the following result
   running the program:
 

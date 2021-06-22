@@ -1,2 +1,3 @@
 blacklisted-names = []
+redundant-clone = false
 type-complexity-threshold = 4096

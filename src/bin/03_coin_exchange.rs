@@ -48,7 +48,9 @@ fn forge_dime() -> Session<Dime> {
 fn vending_machine(
 ) -> Session<ReceiveChannel<Dime, SendValue<Drink, End>>> {
   receive_channel(move |dime| {
-    println!("[Vending Machine] Received a dime, dispensing soft drink");
+    println!(
+      "[Vending Machine] Received a dime, dispensing soft drink"
+    );
     receive_value_from(dime, move |_| {
       send_value(Drink, wait(dime, terminate()))
     })
@@ -63,7 +65,9 @@ fn coin_exchange() -> Session<
 > {
   receive_channel(move |nickel1| {
     receive_channel(move |nickel2| {
-      println!("[Coin Exchange] Received 2 nickels, dispensing 1 dime");
+      println!(
+        "[Coin Exchange] Received 2 nickels, dispensing 1 dime"
+      );
       receive_value_from(nickel1, move |_| {
         receive_value_from(nickel2, move |_| {
           include_session(forge_dime(), move |dime| {
@@ -94,10 +98,16 @@ fn main_session() -> Session<End> {
                 send_channel_to(
                   vending_machine,
                   dime,
-                  receive_value_from(vending_machine, move |_drink| {
-                    println!("[Main] Gotten Drink drink");
-                    wait_all!([vending_machine, coin_exchange], terminate())
-                  }),
+                  receive_value_from(
+                    vending_machine,
+                    move |_drink| {
+                      println!("[Main] Gotten Drink drink");
+                      wait_all!(
+                        [vending_machine, coin_exchange],
+                        terminate()
+                      )
+                    },
+                  ),
                 )
               }),
             ),
