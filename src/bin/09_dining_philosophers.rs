@@ -68,12 +68,11 @@ type Fork = LinearToShared<Release>;
 
 fn fork(id: u8) -> SharedSession<Fork> {
   // todo!("Implement fork here");
-  accept_shared_session(move || {
+  accept_shared_session(
     step(async move {
       println!("fork {} has been acquired", id);
       detach_shared_session(fork(id))
-    })
-  })
+    }))
 }
 
 fn run_fork(id: u8) -> SharedChannel<Fork> {

@@ -50,7 +50,7 @@ define_choice! { QueueOps;
 
 fn shared_queue(mut queue: Vec<String>) -> SharedSession<Queue> {
   // todo!("Implement shared queue");
-  accept_shared_session(move || {
+  accept_shared_session(
     offer_choice! {
       Enqueue => {
         receive_value(move |val: String| {
@@ -62,8 +62,7 @@ fn shared_queue(mut queue: Vec<String>) -> SharedSession<Queue> {
         send_value(queue.pop(),
           detach_shared_session(shared_queue(queue)))
       }
-    }
-  })
+    })
 }
 
 fn create_shared_queue() -> SharedChannel<Queue> {
